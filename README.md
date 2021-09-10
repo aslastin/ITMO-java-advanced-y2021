@@ -27,45 +27,32 @@
     7. Если родительская директория выходного файла не существует, то соответствующий путь надо создать.
     
     8. Размеры файлов могут превышать размер оперативной памяти.
-    
-    <br>
 
     9. Пример
     
         Входной файл
 
-        `samples/1`
-
-        `samples/12`
-
-        `samples/123`
-
-        `samples/1234`
-
-        `samples/1`
-
-        `samples/binary`
-
-        `samples/no-such-file`
-        
-        <br>                 
+        ```sh
+        samples/1
+        samples/12
+        samples/123
+        samples/1234
+        samples/1
+        samples/binary
+        samples/no-such-file
+        ```               
 
         Выходной файл
 
-        `0000000000000031 samples/1`
-            
-        `0000000000003132 samples/12`
-            
-        `0000000000313233 samples/123`
-        
-        `0000000031323334 samples/1234`
-            
-        `0000000000000031 samples/1`
-        
-        `005501015554abff samples/binary`
-        
-        `0000000000000000 samples/no-such-file`
-                            
+        ```sh
+        0000000000000031 samples/1
+        0000000000003132 samples/12
+        0000000000313233 samples/123
+        0000000031323334 samples/1234
+        0000000000000031 samples/1
+        005501015554abff samples/binary
+        0000000000000000 samples/no-such-file
+        ```
 
 2. Сложный вариант:
     1. Разработайте класс `RecursiveWalk`, осуществляющий подсчет хеш-сумм файлов в директориях
@@ -76,31 +63,24 @@
     
         Входной файл
 
-        `samples/binary`
-            
-        `samples`
-        
-        `samples/no-such-file`
-                            
-        <br>
+        ```sh
+        samples/binary
+        samples
+        samples/no-such-file
+        ```
 
         Выходной файл
 
-        `005501015554abff samples/binary`
-        
-        `0000000000000031 samples/1`
-            
-        `0000000000003132 samples/12`
-        
-        `0000000000313233 samples/123`
-        
-        `0000000031323334 samples/1234`
-        
-        `005501015554abff samples/binary`
-        
-        `0000000000000000 samples/no-such-file`
+        ```sh
+        005501015554abff samples/binary
+        0000000000000031 samples/1    
+        0000000000003132 samples/12
+        0000000000313233 samples/123
+        0000000031323334 samples/1234
+        005501015554abff samples/binary
+        0000000000000000 samples/no-such-file
+        ```
                             
-
 3. При выполнении задания следует обратить внимание на:
     * Дизайн и обработку исключений, диагностику ошибок.
 
