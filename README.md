@@ -102,11 +102,11 @@
 
 Исходный код
 
- * простой вариант (`Walk`):
+ * простой вариант (`Walk`) ✅:
     [тесты](modules/info.kgeorgiy.java.advanced.walk/info/kgeorgiy/java/advanced/walk/WalkTest.java)
- * сложный вариант (`RecursiveWalk`):
+ * сложный вариант (`RecursiveWalk`) ✅:
     [тесты](modules/info.kgeorgiy.java.advanced.walk/info/kgeorgiy/java/advanced/walk/RecursiveWalkTest.java)
- * продвинутый вариант (`AdvancedWalk`):
+ * продвинутый вариант (`AdvancedWalk`) ✅:
     должный проходить тесты от простого и сложного вариантов
 
 Тестовый модуль: [info.kgeorgiy.java.advanced.walk](artifacts/info.kgeorgiy.java.advanced.walk.jar)
@@ -152,11 +152,11 @@
 
 Исходный код
 
- * простой вариант (`SortedSet`): 
+ * простой вариант (`SortedSet`) ✅: 
     [тесты](modules/info.kgeorgiy.java.advanced.arrayset/info/kgeorgiy/java/advanced/arrayset/SortedSetTest.java)
- * сложный вариант (`NavigableSet`): 
+ * сложный вариант (`NavigableSet`) ✅: 
     [тесты](modules/info.kgeorgiy.java.advanced.arrayset/info/kgeorgiy/java/advanced/arrayset/NavigableSetTest.java)
- * продвинутый вариант (`AdvancedSet`): 
+ * продвинутый вариант (`AdvancedSet`) ✅: 
     [тесты](modules/info.kgeorgiy.java.advanced.arrayset/info/kgeorgiy/java/advanced/arrayset/AdvancedSetTest.java)
 
 Тестовый модуль: [info.kgeorgiy.java.advanced.arrayset](artifacts/info.kgeorgiy.java.advanced.arrayset.jar)
@@ -184,13 +184,13 @@
 
 Исходный код
 
- * простой вариант (`StudentQuery`):
+ * простой вариант (`StudentQuery`) ✅:
     [интерфейс](modules/info.kgeorgiy.java.advanced.student/info/kgeorgiy/java/advanced/student/StudentQuery.java),
     [тесты](modules/info.kgeorgiy.java.advanced.student/info/kgeorgiy/java/advanced/student/StudentQueryTest.java)
- * сложный вариант (`GroupQuery`):
+ * сложный вариант (`GroupQuery`) ✅:
     [интерфейс](modules/info.kgeorgiy.java.advanced.student/info/kgeorgiy/java/advanced/student/GroupQuery.java),
     [тесты](modules/info.kgeorgiy.java.advanced.student/info/kgeorgiy/java/advanced/student/GroupQueryTest.java)
- * продвинутый вариант (`AdvancedQuery`):
+ * продвинутый вариант (`AdvancedQuery`) ✅:
     [интерфейс](modules/info.kgeorgiy.java.advanced.student/info/kgeorgiy/java/advanced/student/AdvancedQuery.java),
     [тесты](modules/info.kgeorgiy.java.advanced.student/info/kgeorgiy/java/advanced/student/AdvancedQueryTest.java)
 
@@ -217,9 +217,9 @@
     
 2. В задании выделяются три варианта:
 
-    * _Простой_ — `Implementor` должен уметь реализовывать только интерфейсы (но не классы). Поддержка generics не требуется.
+    * _Простой_ ✅ — `Implementor` должен уметь реализовывать только интерфейсы (но не классы). Поддержка generics не требуется.
 
-    * _Сложный_ — `Implementor` должен уметь реализовывать и классы, и интерфейсы. Поддержка generics не требуется.
+    * _Сложный_ ✅ — `Implementor` должен уметь реализовывать и классы, и интерфейсы. Поддержка generics не требуется.
     
     * _Бонусный_ — `Implementor` должен уметь реализовывать generic-классы и интерфейсы. Сгенерированный код должен иметь корректные параметры типов и не порождать `UncheckedWarning`.
 
@@ -230,13 +230,13 @@
 
 Исходный код
 
- * простой вариант (`interface`): 
+ * простой вариант (`interface`) ✅: 
     [тесты](modules/info.kgeorgiy.java.advanced.implementor/info/kgeorgiy/java/advanced/implementor/InterfaceImplementorTest.java)
- * сложный вариант (`class`):
+ * сложный вариант (`class`) ✅:
     [тесты](modules/info.kgeorgiy.java.advanced.implementor/info/kgeorgiy/java/advanced/implementor/ClassImplementorTest.java)
- * продвинутый вариант (`advanced`):
+ * продвинутый вариант (`advanced`) ✅:
     [тесты](modules/info.kgeorgiy.java.advanced.implementor/info/kgeorgiy/java/advanced/implementor/AdvancedImplementorTest.java)
- * предварительные тесты бонусного варианта (`covariant`):
+ * предварительные тесты бонусного варианта (`covariant`) ✅:
     [тесты](modules/info.kgeorgiy.java.advanced.implementor/info/kgeorgiy/java/advanced/implementor/AdvancedImplementorTest.java)
 
 Тестовый модуль: [info.kgeorgiy.java.advanced.implementor](artifacts/info.kgeorgiy.java.advanced.implementor.jar)
@@ -273,11 +273,11 @@
 
 Исходный код
 
- * простой вариант (`jar-interface`):
+ * простой вариант (`jar-interface`) ✅:
     [тесты](modules/info.kgeorgiy.java.advanced.implementor/info/kgeorgiy/java/advanced/implementor/InterfaceJarImplementorTest.java)
- * сложный вариант (`jar-class`):
+ * сложный вариант (`jar-class`) ✅:
     [тесты](modules/info.kgeorgiy.java.advanced.implementor/info/kgeorgiy/java/advanced/implementor/ClassJarImplementorTest.java)
- * продвинутый вариант (`jar-advanced`):
+ * продвинутый вариант (`jar-advanced`) ✅:
     [тесты](modules/info.kgeorgiy.java.advanced.implementor/info/kgeorgiy/java/advanced/implementor/AdvancedJarImplementorTest.java)
 
 Тестовый модуль: [info.kgeorgiy.java.advanced.implementor](artifacts/info.kgeorgiy.java.advanced.implementor.jar)
@@ -311,11 +311,11 @@
 
 Исходный код
 
- * простой вариант (`jar-interface`):
+ * простой вариант (`jar-interface`) ✅:
     [тесты](modules/info.kgeorgiy.java.advanced.implementor/info/kgeorgiy/java/advanced/implementor/InterfaceJarImplementorTest.java)
- * сложный вариант (`jar-class`):
+ * сложный вариант (`jar-class`) ✅:
     [тесты](modules/info.kgeorgiy.java.advanced.implementor/info/kgeorgiy/java/advanced/implementor/ClassJarImplementorTest.java)
- * продвинутый вариант (`jar-advanced`):
+ * продвинутый вариант (`jar-advanced`) ✅:
     [тесты](modules/info.kgeorgiy.java.advanced.implementor/info/kgeorgiy/java/advanced/implementor/AdvancedJarImplementorTest.java)
 
 Тестовый модуль: [info.kgeorgiy.java.advanced.implementor](artifacts/info.kgeorgiy.java.advanced.implementor.jar)
@@ -359,19 +359,19 @@
 
 Тестирование
 
- * простой вариант:
+ * простой вариант ✅:
    ```info.kgeorgiy.java.advanced.concurrent scalar <полное имя класса>```
 
    Класс должен реализовывать интерфейс
    [ScalarIP](modules/info.kgeorgiy.java.advanced.concurrent/info/kgeorgiy/java/advanced/concurrent/ScalarIP.java).
 
- * сложный вариант:
+ * сложный вариант: ✅
    ```info.kgeorgiy.java.advanced.concurrent list <полное имя класса>```
 
    Класс должен реализовывать интерфейс
    [ListIP](modules/info.kgeorgiy.java.advanced.concurrent/info/kgeorgiy/java/advanced/concurrent/ListIP.java).
 
- * продвинутый вариант:
+ * продвинутый вариант ✅:
    ```info.kgeorgiy.java.advanced.concurrent advanced <полное имя класса>```
 
    Класс должен реализовывать интерфейс
@@ -430,11 +430,11 @@ public interface ParallelMapper extends AutoCloseable {
 
 Тестирование
 
- * простой вариант:
+ * простой вариант ✅:
     ```info.kgeorgiy.java.advanced.mapper scalar <полное имя класса>```
- * сложный вариант:
+ * сложный вариант ✅:
     ```info.kgeorgiy.java.advanced.mapper list <полное имя класса>```
- * продвинутый вариант:
+ * продвинутый вариант ✅:
     ```info.kgeorgiy.java.advanced.mapper advanced <полное имя класса>```
 
 Исходный код тестов:
@@ -515,9 +515,9 @@ public interface ParallelMapper extends AutoCloseable {
     
 2. Версии задания
 
-    1. _Простая_ — не требуется учитывать ограничения на число одновременных закачек с одного хоста (`perHost >= downloaders`).
+    1. _Простая_ ✅ — не требуется учитывать ограничения на число одновременных закачек с одного хоста (`perHost >= downloaders`).
     
-    2. _Полная_ — требуется учитывать все ограничения.
+    2. _Полная_ ✅ — требуется учитывать все ограничения.
     
     3. _Бонусная_ — сделать параллельный обод в ширину.
 
@@ -587,18 +587,18 @@ public interface ParallelMapper extends AutoCloseable {
 
 Тестирование
 
- * простой вариант:
+ * простой вариант ✅:
     * клиент:
         ```info.kgeorgiy.java.advanced.hello client <полное имя класса>```
     * сервер:
         ```info.kgeorgiy.java.advanced.hello server <полное имя класса>```
- * сложный вариант:
+ * сложный вариант ✅:
     * на противоположной стороне находится система, дающая ответы на различных языках
     * клиент:
         ```info.kgeorgiy.java.advanced.hello client-i18n <полное имя класса>```
     * сервер:
         ```info.kgeorgiy.java.advanced.hello server-i18n <полное имя класса>```
- * продвинутый вариант:
+ * продвинутый вариант ✅:
     * на противоположной стороне находится старая система,
       не полностью соответствующая последней версии спецификации
     * клиент:
@@ -690,7 +690,7 @@ public interface ParallelMapper extends AutoCloseable {
 
 Тестирование
 
- * простой вариант:
+ * простой вариант ✅:
     * клиент:
         ```info.kgeorgiy.java.advanced.hello client <полное имя класса>```
     * сервер:
