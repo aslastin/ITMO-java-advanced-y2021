@@ -1,4 +1,4 @@
-# 4. Implementor
+# Implementor
 
 ## Условие
 
@@ -41,7 +41,7 @@
 
 ## Реализация
 
-- [Код](info/kgeorgiy/ja/slastin/implementor)
+- [Implementor](info/kgeorgiy/ja/slastin/implementor)
 - [Скрипты](implementor_files)
 
 
