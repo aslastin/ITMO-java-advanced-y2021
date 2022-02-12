@@ -49,7 +49,7 @@
         0000000000000000 samples/no-such-file
         ```
 
-2. Сложный вариант:
+2. Сложный вариант ✅:
     1. Разработайте класс `RecursiveWalk`, осуществляющий подсчет хеш-сумм файлов в директориях
 
     2. Входной файл содержит список файлов и директорий, которые требуется обойти. Обход директорий осуществляется рекурсивно.
@@ -85,15 +85,13 @@
 
     * Отсутствие утечки ресурсов.
 
-4. Требования к оформлению задания:
-
-    * Проверяется исходный код задания.
-
-    * Весь код должен находиться в пакете info.kgeorgiy.ja.фамилия.walk.
 
 ## Реализация
 
-[Код](info/kgeorgiy/ja/slastin/walk)
+= [RecursiveWalk](info/kgeorgiy/ja/slastin/walk/RecursiveWalk.java)
+- [Pjw64WriterVisitor](info/kgeorgiy/ja/slastin/walk/Pjw64WriterVisitor.java)
+- [Walk](info/kgeorgiy/ja/slastin/walk/Walk.java)
+- [WalkException](info/kgeorgiy/ja/slastin/walk/WalkException.java)
 
 ## Тесты
 
