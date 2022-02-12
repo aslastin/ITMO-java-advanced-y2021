@@ -1,4 +1,4 @@
-# 7. Web Crawler
+# Web Crawler
 
 ## Условие
 
