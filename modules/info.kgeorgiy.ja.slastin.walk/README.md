@@ -93,7 +93,7 @@
 
 ## Реализация
 
-[Код](info.kgeorgiy.ja.slastin.walk/)
+[Код](info/kgeorgiy/ja/slastin/walk)
 
 ## Тесты
 
