@@ -1,6 +1,6 @@
 # Concurrency
 
-## 5. Итеративный параллелизм
+## Итеративный параллелизм
 
 ### Условие
 
@@ -48,7 +48,7 @@
     * запустите [ConcurrentTest](test/ConcurrentTest.java) с аргументами `advanced info.kgeorgiy.ja.slastin.concurrent.IterativeParallelism`
 
 
-## 6. Параллельный запуск
+## Параллельный запуск
 
 ### Условие
 
