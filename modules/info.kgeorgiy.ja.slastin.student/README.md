@@ -1,4 +1,4 @@
-# 3. Студенты
+# Студенты
 
 ## Условие
 
@@ -16,11 +16,9 @@
 
 ## Реализация
 
-[Код](info/kgeorgiy/ja/slastin/student)
+- [StudentDB](info/kgeorgiy/ja/slastin/student/StudentDB.java)
 
 ## Тесты
-
-Исходный код
 
 * простой вариант (`StudentQuery`) ✅:
     * запустите [StudentTest](test/StudentTest.java) с аргументами `StudentQuery info.kgeorgiy.ja.slastin.student.StudentDB`
