@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TestMapper" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="14" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="MAIN_CLASS_NAME" value="test.MapperTest" />
+    <module name="info.kgeorgiy.ja.slastin.concurrent" />
+    <option name="PROGRAM_PARAMETERS" value="advanced info.kgeorgiy.ja.slastin.concurrent.IterativeParallelism" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

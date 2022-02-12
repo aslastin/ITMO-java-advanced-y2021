@@ -1,6 +1,5 @@
 package info.kgeorgiy.ja.slastin.hello;
 
-import javax.swing.*;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.*;
@@ -8,9 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.Selector;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class Utils {
@@ -75,7 +72,7 @@ public class Utils {
     }
 
     static String getMessage(final ByteBuffer buffer) {
-        String message =  StandardCharsets.UTF_8.decode(buffer).toString();
+        String message = StandardCharsets.UTF_8.decode(buffer).toString();
         buffer.flip();
         return message;
     }

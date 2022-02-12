@@ -35,55 +35,77 @@ public class WebCrawler implements AdvancedCrawler {
         this(new CachingDownloader(), downloaders, extractors, perHost);
     }
 
-    private class HostSupervisor {
-        final Queue<Runnable> pending = new ArrayDeque<>();
-        int processed = 0;
-
-        synchronized void addTask(Runnable task) {
-            if (processed != perHost) {
-                ++processed;
-                downloadPool.submit(task);
-            } else {
-                pending.add(task);
+    private static void shutdownAndAwaitTermination(ExecutorService pool) {
+        pool.shutdown();
+        try {
+            if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
+                pool.shutdownNow();
+                if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
+                    System.err.println("Pool did not terminate");
+                }
             }
-        }
-
-        synchronized void nextTask() {
-            Runnable task = pending.poll();
-            if (task != null) {
-                downloadPool.submit(task);
-            } else {
-                --processed;
-            }
+        } catch (InterruptedException ie) {
+            pool.shutdownNow();
+            Thread.currentThread().interrupt();
         }
     }
 
-    private class StoppablePhasers {
-        final Set<Phaser> phasers = ConcurrentHashMap.newKeySet();
-
-        void add(Phaser phaser) {
-            if (isClosed) {
-                synchronized (this) {
-                    phaser.forceTermination();
-                    phasers.add(phaser);
-                }
-            } else {
-                phasers.add(phaser);
-            }
+    private static void checkIsPositive(int arg, String argName) {
+        if (arg <= 0) {
+            throw new IllegalArgumentException(argName + " must be positive");
         }
+    }
 
-        void remove(Phaser phaser) {
-            if (isClosed) {
-                synchronized (this) {
-                    phasers.remove(phaser);
-                }
-            } else {
-                phasers.remove(phaser);
-            }
+    private static void checkCrawlerArgs(int downloaders, int extractors, int perHost) {
+        checkIsPositive(downloaders, "downloaders");
+        checkIsPositive(extractors, "extractors");
+        checkIsPositive(perHost, "perHost");
+    }
+
+    private static void checkDepth(int depth) {
+        checkIsPositive(depth, "depth");
+    }
+
+    private static int retrieveMainArg(String[] args, int index, int defaultValue) {
+        if (args.length <= index) {
+            return defaultValue;
         }
+        int result = 0;
+        try {
+            result = Integer.parseInt(args[index]);
+        } catch (NumberFormatException ignored) {
+        }
+        return result;
+    }
 
-        synchronized void stop() {
-            phasers.forEach(Phaser::forceTermination);
+    private static void processMain(String[] args) {
+        if (args == null || args.length < 1 || args.length > 5 || Arrays.stream(args).anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("Expected such input: url [depth [downloaders [extractors [perHost]]]]");
+        }
+        int depth = retrieveMainArg(args, 1, DEFAULT_DEPTH);
+        checkDepth(depth);
+        int downloaders = retrieveMainArg(args, 2, DEFAULT_DOWNLOADERS);
+        int extractors = retrieveMainArg(args, 3, DEFAULT_EXTRACTORS);
+        int perHost = retrieveMainArg(args, 4, DEFAULT_PERHOST);
+        checkCrawlerArgs(downloaders, extractors, perHost);
+
+        try (WebCrawler crawler = new WebCrawler(downloaders, extractors, perHost)) {
+            Result result = crawler.download(args[0], depth);
+
+            System.out.println("\nDowloaded urls:\n");
+            result.getDownloaded().forEach(System.out::println);
+            System.out.println("\nUrls with error:\n");
+            result.getErrors().forEach((url, error) -> System.out.println(url + " : " + error));
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Can not create instance of CachingDownloader");
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            processMain(args);
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
     }
 
@@ -166,21 +188,6 @@ public class WebCrawler implements AdvancedCrawler {
         return download(url, depth, availableHosts::contains);
     }
 
-    private static void shutdownAndAwaitTermination(ExecutorService pool) {
-        pool.shutdown();
-        try {
-            if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
-                pool.shutdownNow();
-                if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
-                    System.err.println("Pool did not terminate");
-                }
-            }
-        } catch (InterruptedException ie) {
-            pool.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
-    }
-
     @Override
     public void close() {
         if (isClosed) {
@@ -192,62 +199,55 @@ public class WebCrawler implements AdvancedCrawler {
         stoppablePhasers.stop();
     }
 
-    private static void checkIsPositive(int arg, String argName) {
-        if (arg <= 0) {
-            throw new IllegalArgumentException(argName + " must be positive");
+    private class HostSupervisor {
+        final Queue<Runnable> pending = new ArrayDeque<>();
+        int processed = 0;
+
+        synchronized void addTask(Runnable task) {
+            if (processed != perHost) {
+                ++processed;
+                downloadPool.submit(task);
+            } else {
+                pending.add(task);
+            }
+        }
+
+        synchronized void nextTask() {
+            Runnable task = pending.poll();
+            if (task != null) {
+                downloadPool.submit(task);
+            } else {
+                --processed;
+            }
         }
     }
 
-    private static void checkCrawlerArgs(int downloaders, int extractors, int perHost) {
-        checkIsPositive(downloaders, "downloaders");
-        checkIsPositive(extractors, "extractors");
-        checkIsPositive(perHost, "perHost");
-    }
+    private class StoppablePhasers {
+        final Set<Phaser> phasers = ConcurrentHashMap.newKeySet();
 
-    private static void checkDepth(int depth) {
-        checkIsPositive(depth, "depth");
-    }
-
-    private static int retrieveMainArg(String[] args, int index, int defaultValue) {
-        if (args.length <= index) {
-            return defaultValue;
+        void add(Phaser phaser) {
+            if (isClosed) {
+                synchronized (this) {
+                    phaser.forceTermination();
+                    phasers.add(phaser);
+                }
+            } else {
+                phasers.add(phaser);
+            }
         }
-        int result = 0;
-        try {
-            result = Integer.parseInt(args[index]);
-        } catch (NumberFormatException ignored) {
+
+        void remove(Phaser phaser) {
+            if (isClosed) {
+                synchronized (this) {
+                    phasers.remove(phaser);
+                }
+            } else {
+                phasers.remove(phaser);
+            }
         }
-        return result;
-    }
 
-    private static void processMain(String[] args) {
-        if (args == null || args.length < 1 || args.length > 5 || Arrays.stream(args).anyMatch(Objects::isNull)) {
-            throw new IllegalArgumentException("Expected such input: url [depth [downloaders [extractors [perHost]]]]");
-        }
-        int depth = retrieveMainArg(args, 1, DEFAULT_DEPTH);
-        checkDepth(depth);
-        int downloaders = retrieveMainArg(args, 2, DEFAULT_DOWNLOADERS);
-        int extractors = retrieveMainArg(args, 3, DEFAULT_EXTRACTORS);
-        int perHost = retrieveMainArg(args, 4, DEFAULT_PERHOST);
-        checkCrawlerArgs(downloaders, extractors, perHost);
-
-        try (WebCrawler crawler = new WebCrawler(downloaders, extractors, perHost)) {
-            Result result = crawler.download(args[0], depth);
-
-            System.out.println("\nDowloaded urls:\n");
-            result.getDownloaded().forEach(System.out::println);
-            System.out.println("\nUrls with error:\n");
-            result.getErrors().forEach((url, error) -> System.out.println(url + " : " + error));
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Can not create instance of CachingDownloader");
-        }
-    }
-
-    public static void main(String[] args) {
-        try {
-            processMain(args);
-        } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
+        synchronized void stop() {
+            phasers.forEach(Phaser::forceTermination);
         }
     }
 }

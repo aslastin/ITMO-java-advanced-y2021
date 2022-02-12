@@ -1,4 +1,4 @@
-package tests;
+package test;
 
 import info.kgeorgiy.ja.slastin.implementor.Implementor;
 import info.kgeorgiy.java.advanced.implementor.ImplerException;

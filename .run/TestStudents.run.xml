@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TestStudents" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="test.StudentTest" />
+    <module name="info.kgeorgiy.ja.slastin.student" />
+    <option name="PROGRAM_PARAMETERS" value="AdvancedQuery info.kgeorgiy.ja.slastin.student.StudentDB" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

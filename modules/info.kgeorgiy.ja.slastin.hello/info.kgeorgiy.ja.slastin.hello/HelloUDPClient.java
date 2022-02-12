@@ -3,13 +3,15 @@ package info.kgeorgiy.ja.slastin.hello;
 import info.kgeorgiy.java.advanced.hello.HelloClient;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketAddress;
+import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -17,8 +19,8 @@ import java.util.stream.IntStream;
 import static info.kgeorgiy.ja.slastin.hello.Utils.*;
 
 public class HelloUDPClient implements HelloClient {
-    private final static Pattern RESPONSE_PATTERN = Pattern.compile("\\D*(\\d+)\\D+(\\d+)\\D*");
     final static int RESPONSE_TIMEOUT = 500;
+    private final static Pattern RESPONSE_PATTERN = Pattern.compile("\\D*(\\d+)\\D+(\\d+)\\D*");
 
     static void throwBadArg(final String argName, final String condition) {
         throw new RuntimeException(argName + " must be " + condition);
@@ -46,19 +48,6 @@ public class HelloUDPClient implements HelloClient {
         final Matcher matcher = RESPONSE_PATTERN.matcher(response);
         return matcher.find() && matcher.group(1).equals(Integer.toString(threadNumber)) &&
                 matcher.group(2).equals(Integer.toString(requestNumber));
-    }
-
-    @Override
-    public void run(final String host, final int port, final String prefix, final int threads, final int requests) {
-        checkRunArgs(host, port, prefix, threads, requests);
-        final SocketAddress serverAddress = getSocketAddress(host, port);
-        final ExecutorService sendingService = Executors.newFixedThreadPool(threads);
-        final CountDownLatch latch = new CountDownLatch(threads);
-        IntStream.range(0, threads).forEach(i -> sendingService.execute(() -> sendAndReceive(serverAddress, prefix, i, requests, latch)));
-        try {
-            latch.await();
-        } catch (final InterruptedException ignored) {
-        }
     }
 
     private static void sendAndReceive(final SocketAddress serverAddress, final String prefix, final int threadNumber,
@@ -118,5 +107,18 @@ public class HelloUDPClient implements HelloClient {
 
     public static void main(final String[] args) {
         runClient(args, new HelloUDPClient());
+    }
+
+    @Override
+    public void run(final String host, final int port, final String prefix, final int threads, final int requests) {
+        checkRunArgs(host, port, prefix, threads, requests);
+        final SocketAddress serverAddress = getSocketAddress(host, port);
+        final ExecutorService sendingService = Executors.newFixedThreadPool(threads);
+        final CountDownLatch latch = new CountDownLatch(threads);
+        IntStream.range(0, threads).forEach(i -> sendingService.execute(() -> sendAndReceive(serverAddress, prefix, i, requests, latch)));
+        try {
+            latch.await();
+        } catch (final InterruptedException ignored) {
+        }
     }
 }

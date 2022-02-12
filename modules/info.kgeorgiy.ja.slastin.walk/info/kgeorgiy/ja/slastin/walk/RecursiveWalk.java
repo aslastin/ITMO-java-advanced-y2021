@@ -1,7 +1,10 @@
 package info.kgeorgiy.ja.slastin.walk;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 
 public class RecursiveWalk {
     private static Path createPath(final String file, final String errorMessage) throws WalkException {

@@ -11,7 +11,8 @@ import java.util.Objects;
 import java.util.concurrent.*;
 
 import static info.kgeorgiy.ja.slastin.hello.HelloUDPClient.throwBadArg;
-import static info.kgeorgiy.ja.slastin.hello.Utils.*;
+import static info.kgeorgiy.ja.slastin.hello.Utils.getResponsePacket;
+import static info.kgeorgiy.ja.slastin.hello.Utils.logError;
 
 public class HelloUDPServer implements HelloServer {
     final static int MAX_POOL_SIZE = 1000;
@@ -36,6 +37,33 @@ public class HelloUDPServer implements HelloServer {
         }
         return new ThreadPoolExecutor(1, threads - 1, 1, TimeUnit.MINUTES,
                 new ArrayBlockingQueue<>(MAX_POOL_SIZE), new ThreadPoolExecutor.DiscardPolicy());
+    }
+
+    static String getResponse(final String request) {
+        return "Hello, " + request;
+    }
+
+    public static void runServer(final String[] args, final HelloServer server) {
+        try {
+            if (args == null || args.length != 2 || Arrays.stream(args).anyMatch(Objects::isNull)) {
+                throw new RuntimeException("Expected such input: port threads");
+            }
+            try {
+                server.start(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+                Thread.sleep(10_000);
+            } catch (final NumberFormatException e) {
+                throw new RuntimeException("Invalid input data", e);
+            } catch (final InterruptedException e) {
+                throw new RuntimeException("Server was unexpected interrupted", e);
+            }
+        } catch (final RuntimeException e) {
+            String cause = e.getCause() != null ? " - " + e.getMessage() : "";
+            logError(e.getMessage() + cause);
+        }
+    }
+
+    public static void main(final String[] args) {
+        runServer(args, new HelloUDPServer());
     }
 
     @Override
@@ -83,10 +111,6 @@ public class HelloUDPServer implements HelloServer {
         }
     }
 
-    static String getResponse(final String request) {
-        return "Hello, " + request;
-    }
-
     @Override
     public void close() {
         if (isClosed) {
@@ -96,28 +120,5 @@ public class HelloUDPServer implements HelloServer {
         Utils.close(socket);
         Utils.shutdownAndAwaitTermination(listener, 3, TimeUnit.SECONDS);
         Utils.shutdownAndAwaitTermination(executors, 5, TimeUnit.SECONDS);
-    }
-
-    public static void runServer(final String[] args, final HelloServer server) {
-        try {
-            if (args == null || args.length != 2 || Arrays.stream(args).anyMatch(Objects::isNull)) {
-                throw new RuntimeException("Expected such input: port threads");
-            }
-            try {
-                server.start(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-                Thread.sleep(10_000);
-            } catch (final NumberFormatException e) {
-                throw new RuntimeException("Invalid input data", e);
-            } catch (final InterruptedException e) {
-                throw new RuntimeException("Server was unexpected interrupted", e);
-            }
-        } catch (final RuntimeException e) {
-            String cause = e.getCause() != null ? " - " + e.getMessage() : "";
-            logError(e.getMessage() + cause);
-        }
-    }
-
-    public static void main(final String[] args) {
-        runServer(args, new HelloUDPServer());
     }
 }

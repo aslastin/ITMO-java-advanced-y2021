@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TestWalk" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="test.WalkerTest" />
+    <module name="info.kgeorgiy.ja.slastin.walk" />
+    <option name="PROGRAM_PARAMETERS" value="AdvancedWalk info.kgeorgiy.ja.slastin.walk.RecursiveWalk" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

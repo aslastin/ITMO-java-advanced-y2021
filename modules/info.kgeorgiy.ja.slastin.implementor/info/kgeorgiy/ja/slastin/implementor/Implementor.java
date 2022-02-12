@@ -8,7 +8,10 @@ import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -46,6 +49,49 @@ public class Implementor implements JarImpler {
      * Used in {@link #methodHashCode(Method)} as a <em>module</em>
      */
     private final static int MOD = 40960001;
+    /**
+     * Predicate which returns true if only given method isn't static or final
+     */
+    private static final Predicate<Method> FINAL_OR_STATIC_PREDICATE =
+            method -> Modifier.isFinal(method.getModifiers()) || Modifier.isStatic(method.getModifiers());
+    /**
+     * Comparator which compare classes using {@link Class#isAssignableFrom(Class)}.
+     *
+     * <p>Consider the possible options:
+     *  <ul>
+     *  <li> {@code clazz1 < clazz2 <=> clazz1.isAssignableFrom(clazz2) == true && clazz2.isAssignableFrom(clazz1) == false}</li>
+     *  <li> {@code clazz1 > clazz2 <=> clazz1.isAssignableFrom(clazz2) == false}
+     *  <li> {@code class1 == class2 <=> clazz1.isAssignableFrom(clazz2) == true && clazz2.isAssignableFrom(clazz1) == true}
+     *  </ul>
+     * Null values aren't supported
+     */
+    private static final Comparator<Class<?>> CLASS_NO_NULL_COMPARATOR = (clazz1, clazz2) -> {
+        if (clazz1.isAssignableFrom(clazz2)) {
+            if (clazz2.isAssignableFrom(clazz1)) {
+                return 0;
+            }
+            return -1;
+        }
+        return 1;
+    };
+    /**
+     * Used for deleting files in temporary directory.
+     *
+     * @see SimpleFileVisitor
+     */
+    private static final SimpleFileVisitor<Path> DELETE_VISITOR = new SimpleFileVisitor<>() {
+        @Override
+        public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+            Files.delete(file);
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult postVisitDirectory(final Path dir, final IOException exc) throws IOException {
+            Files.delete(dir);
+            return FileVisitResult.CONTINUE;
+        }
+    };
 
     /**
      * Generates a hashCode for provided method relying on {@link Method#getParameterTypes()} and {@link Method#getName()}
@@ -77,52 +123,8 @@ public class Implementor implements JarImpler {
     }
 
     /**
-     * Predicate which returns true if only given method isn't static or final
-     */
-    private static final Predicate<Method> FINAL_OR_STATIC_PREDICATE =
-            method -> Modifier.isFinal(method.getModifiers()) || Modifier.isStatic(method.getModifiers());
-
-    /**
-     * Comparator which compare classes using {@link Class#isAssignableFrom(Class)}.
-     *
-     * <p>Consider the possible options:
-     *  <ul>
-     *  <li> {@code clazz1 < clazz2 <=> clazz1.isAssignableFrom(clazz2) == true && clazz2.isAssignableFrom(clazz1) == false}</li>
-     *  <li> {@code clazz1 > clazz2 <=> clazz1.isAssignableFrom(clazz2) == false}
-     *  <li> {@code class1 == class2 <=> clazz1.isAssignableFrom(clazz2) == true && clazz2.isAssignableFrom(clazz1) == true}
-     *  </ul>
-     * Null values aren't supported
-     */
-    private static final Comparator<Class<?>> CLASS_NO_NULL_COMPARATOR = (clazz1, clazz2) -> {
-        if (clazz1.isAssignableFrom(clazz2)) {
-            if (clazz2.isAssignableFrom(clazz1)) {
-                return 0;
-            }
-            return -1;
-        }
-        return 1;
-    };
-
-    /**
-     * Used for deleting files in temporary directory.
-     * @see SimpleFileVisitor
-     */
-    private static final SimpleFileVisitor<Path> DELETE_VISITOR = new SimpleFileVisitor<>() {
-        @Override
-        public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-            Files.delete(file);
-            return FileVisitResult.CONTINUE;
-        }
-
-        @Override
-        public FileVisitResult postVisitDirectory(final Path dir, final IOException exc) throws IOException {
-            Files.delete(dir);
-            return FileVisitResult.CONTINUE;
-        }
-    };
-
-    /**
      * Delete all content of provided root using {@link #DELETE_VISITOR}
+     *
      * @param root root to delete
      * @throws IOException If errors occur during deleting root content
      */
@@ -133,14 +135,14 @@ public class Implementor implements JarImpler {
     /**
      * @param token used for creating result predicate
      * @return {@link Predicate} which returns true if only the given method is:
-     *  <ul>
-     *  <li> not Synthetic {@link Method#isSynthetic()}</li>
-     *  <li> not Bridge {@link Method#isBridge()}</li>
-     *  <li> not final </li>
-     *  <li> not private </li>
-     *  <li> not static </li>
-     *  <li> package-private and has the same package as a provided token </li>
-     *  </ul>
+     * <ul>
+     * <li> not Synthetic {@link Method#isSynthetic()}</li>
+     * <li> not Bridge {@link Method#isBridge()}</li>
+     * <li> not final </li>
+     * <li> not private </li>
+     * <li> not static </li>
+     * <li> package-private and has the same package as a provided token </li>
+     * </ul>
      */
     private static Predicate<Method> getMethodPredicate(Class<?> token) {
         String tokenPackage = token.getPackageName();
@@ -174,9 +176,9 @@ public class Implementor implements JarImpler {
      * <pre>{@code return (token.getPackageName() + "." +
      *                      implClassName(token)).replace(".", separator) + suffix;}</pre>
      *
-     * @param token provided token with help of whom file name will be generated
+     * @param token     provided token with help of whom file name will be generated
      * @param separator used as a path delimiter in file name
-     * @param suffix extension of result file
+     * @param suffix    extension of result file
      * @return {@link String} respresenting token file name
      */
     private static String getTokenFileName(Class<?> token, String separator, String suffix) {
@@ -187,8 +189,8 @@ public class Implementor implements JarImpler {
      * Returns path to file, containing implementation of the given class, with specific file extension
      * located in directory represented by path
      *
-     * @param root path to parent directory of class
-     * @param token class to get name from
+     * @param root   path to parent directory of class
+     * @param token  class to get name from
      * @param suffix file extension
      * @return {@link Path} representing path to certain file
      */
@@ -281,12 +283,12 @@ public class Implementor implements JarImpler {
     /**
      * Returns string consists of implemented executable
      *
-     * @param modifiers used as modifiers of the executable
+     * @param modifiers   used as modifiers of the executable
      * @param returnValue used as return value of the executable
-     * @param name used as a name of the executable
-     * @param parameters used as parameters of the executable
-     * @param exceptions used as an exception signature of the executable
-     * @param body used as a body of the executable
+     * @param name        used as a name of the executable
+     * @param parameters  used as parameters of the executable
+     * @param exceptions  used as an exception signature of the executable
+     * @param body        used as a body of the executable
      * @return {@link String} representing implemented executable
      */
     private static String implExecutable(String modifiers, String returnValue, String name,
@@ -375,9 +377,9 @@ public class Implementor implements JarImpler {
     /**
      * Do DFS by token inheritance tree including interfaces and classes in it.
      *
-     * @param token with that token DFS on the inheritance tree will be started
+     * @param token         with that token DFS on the inheritance tree will be started
      * @param visitedTokens contains all visited classes in inheritance token
-     * @param methods contains all methods of provided token including all classes in inheritance tree
+     * @param methods       contains all methods of provided token including all classes in inheritance tree
      */
     private static void methodDFS(Class<?> token, Set<Class<?>> visitedTokens, List<Method> methods) {
         if (token == null || visitedTokens.contains(token)) {
@@ -438,7 +440,7 @@ public class Implementor implements JarImpler {
      * Returns implementation of the method based on methods.
      * Supports covariant return type, exceptions with different signature. Result method will have <em>public</em> modifier.
      *
-     * @param methods methods who are equal by {@link #methodEquals(Method, Method)}
+     * @param methods         methods who are equal by {@link #methodEquals(Method, Method)}
      * @param methodPredicate predicate with help of whom methods will be filtered
      * @return {@link String} representing implemented method or empty string if method can not be implemented
      */
@@ -478,7 +480,7 @@ public class Implementor implements JarImpler {
      * Writes args with help of writer using Unicode format
      *
      * @param writer write given arguments to itself
-     * @param args arguments to be written
+     * @param args   arguments to be written
      * @throws IOException if error occur during {@code writer.write(...)}
      */
     private static void writeAll(Writer writer, String... args) throws IOException {
@@ -494,9 +496,9 @@ public class Implementor implements JarImpler {
     /**
      * Check that token satisfy given predicate
      *
-     * @param token token for predicate check
+     * @param token     token for predicate check
      * @param predicate predicate applied for to the token
-     * @param message information about occurred error
+     * @param message   information about occurred error
      * @throws ImplerException if {@code predicate.test(token) == false}
      */
     private static void checkCondition(Class<?> token, Predicate<Class<?>> predicate, String message) throws ImplerException {
@@ -510,13 +512,13 @@ public class Implementor implements JarImpler {
      *
      * @param token class that will be checked
      * @throws ImplerException if given token is :
-     *  <ol>
-     *      <li>primitive type</li>
-     *      <li>array type</li>
-     *      <li>{@link Enum}</li>
-     *      <li>final class</li>
-     *      <li>private class</li>
-     *  </ol>
+     *                         <ol>
+     *                             <li>primitive type</li>
+     *                             <li>array type</li>
+     *                             <li>{@link Enum}</li>
+     *                             <li>final class</li>
+     *                             <li>private class</li>
+     *                         </ol>
      */
     private static void checkToken(Class<?> token) throws ImplerException {
         checkCondition(token, Class::isPrimitive, "primitive");
@@ -557,28 +559,68 @@ public class Implementor implements JarImpler {
     }
 
     /**
+     * Runs {@link Implementor} in different ways.
+     * There are 2 possible ways:
+     *  <ul>
+     *  <li> 2 arguments: className rootPath - runs {@link #implement(Class, Path)} with given arguments</li>
+     *  <li> 3 arguments: -jar className jarPath - runs {@link #implementJar(Class, Path)} with last two arguments</li>
+     *  </ul>
+     * <p>
+     * Method prints message with information about arisen problem,
+     * if any arguments are invalid or an error occurs during implementation.
+     *
+     * @param args arguments for running an application
+     */
+    public static void main(String[] args) {
+        if (args == null || !(args.length == 2 || args.length == 3)) {
+            System.err.println("Expected two or three arguments");
+            return;
+        }
+        for (String arg : args) {
+            if (arg == null) {
+                System.err.println("All args must be no null");
+                return;
+            }
+        }
+        try {
+            JarImpler implementor = new Implementor();
+            if (args.length == 2) {
+                implementor.implement(Class.forName(args[0]), Paths.get(args[1]));
+            } else {
+                implementor.implementJar(Class.forName(args[1]), Paths.get(args[2]));
+            }
+        } catch (ImplerException e) {
+            System.err.println("Can not implement input class: " + e);
+        } catch (ClassNotFoundException e) {
+            System.err.println("Input class wasn't found : " + e);
+        } catch (InvalidPathException e) {
+            System.err.println("Incorrect input path : " + e);
+        }
+    }
+
+    /**
      * Produces .class file implementing class or interface specified by provided token.
      * This file is located in the root directory and same package as token.
      *
      * <p>Generated class full name is same as full name of the given token with Impl suffix in the end.
      *
      * @param token token to be implemented
-     * @param root root of the directory where implemented class will be located
+     * @param root  root of the directory where implemented class will be located
      * @throws ImplerException if the given token cannot be generated for one of such reasons:
-     *  <ul>
-     *  <li> Some arguments are null</li>
-     *  <li> Given token is :
-     *      <ol>
-     *      <li>primitive type</li>
-     *      <li>array type</li>
-     *      <li>{@link Enum}</li>
-     *      <li>final class</li>
-     *      <li>private class</li>
-     *      </ol>
-     *  </li>
-     *  <li> token contains only private constructors </li>
-     *  <li> I/O exceptions occurs during implementation </li>
-     *  </ul>
+     *                         <ul>
+     *                         <li> Some arguments are null</li>
+     *                         <li> Given token is :
+     *                             <ol>
+     *                             <li>primitive type</li>
+     *                             <li>array type</li>
+     *                             <li>{@link Enum}</li>
+     *                             <li>final class</li>
+     *                             <li>private class</li>
+     *                             </ol>
+     *                         </li>
+     *                         <li> token contains only private constructors </li>
+     *                         <li> I/O exceptions occurs during implementation </li>
+     *                         </ul>
      */
     @Override
     public void implement(Class<?> token, Path root) throws ImplerException {
@@ -608,15 +650,15 @@ public class Implementor implements JarImpler {
      * <p>During implementation creates temporary directory where stores temporary .java and .class files.
      * If method fails to delete temporary directory with files in it, it prints information about occurred problems.
      *
-     * @param token token to be implemented
+     * @param token   token to be implemented
      * @param jarFile .jar file where the implemented class will be located
      * @throws ImplerException if the given class cannot be created due to one of such reasons:
-     *  <ul>
-     *  <li> Some arguments are null</li>
-     *  <li> The problems with I/O occurred during implementation </li>
-     *  <li> Error occurs during implementation by {@link #implement(Class, Path)} </li>
-     *  <li> {@link JavaCompiler} failed to compile implemented class </li>
-     *  </ul>
+     *                         <ul>
+     *                         <li> Some arguments are null</li>
+     *                         <li> The problems with I/O occurred during implementation </li>
+     *                         <li> Error occurs during implementation by {@link #implement(Class, Path)} </li>
+     *                         <li> {@link JavaCompiler} failed to compile implemented class </li>
+     *                         </ul>
      */
     @Override
     public void implementJar(Class<?> token, Path jarFile) throws ImplerException {
@@ -652,45 +694,6 @@ public class Implementor implements JarImpler {
             } catch (IOException e) {
                 System.err.println("Unable to delete temp directory: " + e.getMessage());
             }
-        }
-    }
-
-    /**
-     * Runs {@link Implementor} in different ways.
-     * There are 2 possible ways:
-     *  <ul>
-     *  <li> 2 arguments: className rootPath - runs {@link #implement(Class, Path)} with given arguments</li>
-     *  <li> 3 arguments: -jar className jarPath - runs {@link #implementJar(Class, Path)} with last two arguments</li>
-     *  </ul>
-     *  <p>
-     * Method prints message with information about arisen problem,
-     * if any arguments are invalid or an error occurs during implementation.
-     * @param args arguments for running an application
-     */
-    public static void main(String[] args) {
-        if (args == null || !(args.length == 2 || args.length == 3)) {
-            System.err.println("Expected two or three arguments");
-            return;
-        }
-        for (String arg : args) {
-            if (arg == null) {
-                System.err.println("All args must be no null");
-                return;
-            }
-        }
-        try {
-            JarImpler implementor = new Implementor();
-            if (args.length == 2) {
-                implementor.implement(Class.forName(args[0]), Paths.get(args[1]));
-            } else {
-                implementor.implementJar(Class.forName(args[1]), Paths.get(args[2]));
-            }
-        } catch (ImplerException e) {
-            System.err.println("Can not implement input class: " + e);
-        } catch (ClassNotFoundException e) {
-            System.err.println("Input class wasn't found : " + e);
-        } catch (InvalidPathException e) {
-            System.err.println("Incorrect input path : " + e);
         }
     }
 }

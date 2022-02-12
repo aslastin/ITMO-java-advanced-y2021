@@ -1,29 +1,21 @@
 package info.kgeorgiy.ja.slastin.hello;
 
-import info.kgeorgiy.java.advanced.hello.HelloClient;
-
-import java.io.CharArrayReader;
-import java.io.Closeable;
 import java.io.IOException;
-import java.io.Writer;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedSelectorException;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayDeque;
-import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import static info.kgeorgiy.ja.slastin.hello.Utils.logError;
-import static info.kgeorgiy.ja.slastin.hello.Utils.shutdownAndAwaitTermination;
 
 public class HelloUDPNonblockingServer extends HelloUDPServer {
     private Selector selector;
@@ -32,6 +24,10 @@ public class HelloUDPNonblockingServer extends HelloUDPServer {
     private ExecutorService executors;
     private Queue<ResponseInfo> responseInfos;
     private volatile boolean isClosed = true;
+
+    public static void main(String[] args) {
+        runServer(args, new HelloUDPNonblockingServer());
+    }
 
     @Override
     public void start(final int port, final int threads) {
@@ -129,9 +125,5 @@ public class HelloUDPNonblockingServer extends HelloUDPServer {
         public SocketAddress getClientAddress() {
             return clientAddress;
         }
-    }
-
-    public static void main(String[] args) {
-        runServer(args, new HelloUDPNonblockingServer());
     }
 }
