@@ -21,8 +21,6 @@
 
 ## Тесты
 
-Исходный код
-
 * простой вариант (`SortedSet`) ✅:
     * запустите [ArraySetTest](test/ArraySetTest.java) с аргументами `SortedSet info.kgeorgiy.ja.slastin.arrayset.ArraySet`
 * сложный вариант (`NavigableSet`) ✅:
