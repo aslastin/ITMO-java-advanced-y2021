@@ -88,7 +88,7 @@
 
 ## Реализация
 
-= [RecursiveWalk](info/kgeorgiy/ja/slastin/walk/RecursiveWalk.java)
+- [RecursiveWalk](info/kgeorgiy/ja/slastin/walk/RecursiveWalk.java)
 - [Pjw64WriterVisitor](info/kgeorgiy/ja/slastin/walk/Pjw64WriterVisitor.java)
 - [Walk](info/kgeorgiy/ja/slastin/walk/Walk.java)
 - [WalkException](info/kgeorgiy/ja/slastin/walk/WalkException.java)
