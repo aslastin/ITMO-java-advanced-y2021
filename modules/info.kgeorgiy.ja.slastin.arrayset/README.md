@@ -16,7 +16,7 @@
 
 ## Реализация
 
-[Код](info/kgeorgiy/ja/slastin/arrayset)
+[Код](info.kgeorgiy.ja.slastin.arrayset)
 
 ## Тесты
 
@@ -27,4 +27,4 @@
 * сложный вариант (`NavigableSet`) ✅:
     * запустите [ArraySetTest](test/ArraySetTest.java) с аргументами `NavigableSet info.kgeorgiy.ja.slastin.arrayset.ArraySet`
 * продвинутый вариант (`AdvancedSet`) ✅:
-    * запустите [AdvancedSet](test/ArraySetTest.java) с аргументами `AdvancedSet info.kgeorgiy.ja.slastin.arrayset.ArraySet`
+    * запустите [ArraySetTest](test/ArraySetTest.java) с аргументами `AdvancedSet info.kgeorgiy.ja.slastin.arrayset.ArraySet`
