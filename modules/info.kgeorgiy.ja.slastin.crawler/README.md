@@ -20,10 +20,10 @@
 
     ```java
     public interface Crawler extends AutoCloseable {
-            Result download(String url, int depth);
+        Result download(String url, int depth);
 
-            void close();
-        }
+        void close();
+    }
     ```                     
 
     * Метод `download` должен рекурсивно обходить страницы, начиная с указанного URL на указанную глубину и возвращать список загруженных страниц и файлов. Например, если глубина равна 1, то должна быть загружена только указанная страница. Если глубина равна 2, то указанная страница и те страницы и файлы, на которые она ссылается и так далее. Этот метод может вызываться параллельно в нескольких потоках.
@@ -40,8 +40,8 @@
 
     ```java
     public interface Downloader {
-            public Document download(final String url) throws IOException;
-        }
+        public Document download(final String url) throws IOException;
+    }
     ```                           
 
     * Метод `download` загружает документ по его адресу ([URL](http://tools.ietf.org/html/rfc3986)).
@@ -50,8 +50,8 @@
 
     ```java
     public interface Document {
-                List extractLinks() throws IOException;
-            } 
+        List extractLinks() throws IOException;
+    } 
     ```
 
    Ссылки, возвращаемые документом, являются абсолютными и имеют схему `http` или `https`.
