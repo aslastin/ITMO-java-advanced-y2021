@@ -6,7 +6,7 @@
 
     1. Класс `WebCrawler` должен иметь конструктор
 
-   `public WebCrawler(Downloader downloader, int downloaders, int extractors, int perHost)`
+        `public WebCrawler(Downloader downloader, int downloaders, int extractors, int perHost)`
 
     * `downloader` позволяет скачивать страницы и извлекать из них ссылки;
 
@@ -75,7 +75,7 @@
 
 ## Реализация
 
-[Код](info.kgeorgiy.ja.slastin.crawler)
+- [WebCrawler](info.kgeorgiy.ja.slastin.crawler/WebCrawler.java)
 
 ## Тесты
 
