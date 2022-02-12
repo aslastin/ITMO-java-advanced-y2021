@@ -16,7 +16,8 @@
 
 ## Реализация
 
-[Код](info.kgeorgiy.ja.slastin.arrayset)
+- [ArraySet](info.kgeorgiy.ja.slastin.arrayset/ArraySet.java)
+- [ReversibleList](info.kgeorgiy.ja.slastin.arrayset/ReversibleList.java)
 
 ## Тесты
 
