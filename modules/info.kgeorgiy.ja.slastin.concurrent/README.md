@@ -1,4 +1,4 @@
-# Параллельное программирование
+# Concurrency
 
 ## 5. Итеративный параллелизм
 
@@ -34,7 +34,7 @@
 
 ### Реализация
 
-[Код](info/kgeorgiy/ja/slastin/concurrent/IterativeParallelism.java)
+- [IterativeParallelism](info/kgeorgiy/ja/slastin/concurrent/IterativeParallelism.java)
 
 ### Тесты
 
@@ -90,7 +90,7 @@ public interface ParallelMapper extends AutoCloseable {
 
 ### Реализация
 
-[Код](info/kgeorgiy/ja/slastin/concurrent/ParallelMapperImpl.java)
+- [ParallelMapperImpl](info/kgeorgiy/ja/slastin/concurrent/ParallelMapperImpl.java)
 
 ### Тесты
 
