@@ -41,7 +41,7 @@
 
 ## Реализация
 
-- [Implementor](info/kgeorgiy/ja/slastin/implementor)
+- [Implementor](info/kgeorgiy/ja/slastin/implementor/Implementor.java)
 - [Скрипты](implementor_files)
 
 
