@@ -85,5 +85,5 @@
 * сложный вариант ✅:
     * запустите [CrawlerTest](test/CrawlerTest.java) с аргументами `hard info.kgeorgiy.ja.slastin.crawler.WebCrawler`
 
-* продвинутый вариант ✅: [интерфейс](modules/info.kgeorgiy.java.advanced.crawler/info/kgeorgiy/java/advanced/crawler/AdvancedCrawler.java)
+* продвинутый вариант ✅: [интерфейс](../info.kgeorgiy.java.advanced.crawler/info/kgeorgiy/java/advanced/crawler/AdvancedCrawler.java)
     * запустите [CrawlerTest](test/CrawlerTest.java) с аргументами `advanced info.kgeorgiy.ja.slastin.crawler.WebCrawler`
