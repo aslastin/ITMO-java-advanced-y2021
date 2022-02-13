@@ -48,7 +48,7 @@
 ## Тесты
 
 Класс `Implementor` должен реализовывать интерфейс
-[Impler](modules/info.kgeorgiy.java.advanced.implementor/info/kgeorgiy/java/advanced/implementor/Impler.java).
+[Impler](../info.kgeorgiy.java.advanced.implementor/info/kgeorgiy/java/advanced/implementor/Impler.java).
 
 * простой вариант (`[jar-]interface`) ✅:
     * запустите [ImplementorTest](test/ImplementorTest.java) с аргументами `[jar-]interface info.kgeorgiy.ja.slastin.implementor.Implementor`
