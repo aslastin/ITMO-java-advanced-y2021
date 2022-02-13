@@ -35,6 +35,7 @@
 ### Реализация
 
 - [IterativeParallelism](info/kgeorgiy/ja/slastin/concurrent/IterativeParallelism.java)
+- [ParallelUtils](info/kgeorgiy/ja/slastin/concurrent/ParallelUtils.java)
 
 ### Тесты
 
@@ -56,14 +57,11 @@
 
 ```java
 public interface ParallelMapper extends AutoCloseable {
-        List map(
-            Function f,
-            List args
-        ) throws InterruptedException;
+   List map(Function f, List args) throws InterruptedException;
 
-        @Override
-        void close() throws InterruptedException;
-    } 
+   @Override
+   void close() throws InterruptedException;
+} 
 ```
 
 * Метод `run` должен параллельно вычислять функцию `f` на каждом из указанных аргументов (`args`).
@@ -90,7 +88,9 @@ public interface ParallelMapper extends AutoCloseable {
 
 ### Реализация
 
+- [IterativeParallelism](info/kgeorgiy/ja/slastin/concurrent/IterativeParallelism.java)
 - [ParallelMapperImpl](info/kgeorgiy/ja/slastin/concurrent/ParallelMapperImpl.java)
+- [ParallelUtils](info/kgeorgiy/ja/slastin/concurrent/ParallelUtils.java)
 
 ### Тесты
 
