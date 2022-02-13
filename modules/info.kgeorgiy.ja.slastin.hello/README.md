@@ -1,6 +1,6 @@
 # Network
 
-## 8. HelloUDP
+## HelloUDP
 
 ### Условие
 
@@ -34,7 +34,12 @@
 
     * Если сервер не успевает обрабатывать запросы, прием запросов может быть временно приостановлен.
 
+
 ### Реализация
+
+- [HelloUDPClient.java](info.kgeorgiy.ja.slastin.hello/HelloUDPClient.java)
+- [HelloUDPServer.java](info.kgeorgiy.ja.slastin.hello/HelloUDPServer.java)
+- [Utils](info.kgeorgiy.ja.slastin.hello/Utils.java)
 
 
 ### Тесты
@@ -49,29 +54,23 @@
 Тестирование
 
 * простой вариант ✅:
-    * клиент:
-      ```info.kgeorgiy.java.advanced.hello client <полное имя класса>```
-    * сервер:
-      ```info.kgeorgiy.java.advanced.hello server <полное имя класса>```
+    * клиент: запустите [ClientTest](test/ClientTest.java) с аргументами `client info.kgeorgiy.ja.slastin.hello.HelloUDPClient`
+    * сервер: запустите [ServerTest](test/ServerTest.java) с аргументами `server info.kgeorgiy.ja.slastin.hello.HelloUDPServer`
+
 * сложный вариант ✅:
     * на противоположной стороне находится система, дающая ответы на различных языках
-    * клиент:
-      ```info.kgeorgiy.java.advanced.hello client-i18n <полное имя класса>```
-    * сервер:
-      ```info.kgeorgiy.java.advanced.hello server-i18n <полное имя класса>```
+    * клиент: запустите [ClientTest](test/ClientTest.java) с аргументами `client-i18n info.kgeorgiy.ja.slastin.hello.HelloUDPClient`
+    * сервер: запустите [ServerTest](test/ServerTest.java) с аргументами `server-i18n info.kgeorgiy.ja.slastin.hello.HelloUDPServer`
+
 * продвинутый вариант ✅:
-    * на противоположной стороне находится старая система,
-      не полностью соответствующая последней версии спецификации
-    * клиент:
-      ```info.kgeorgiy.java.advanced.hello client-evil <полное имя класса>```
-    * сервер:
-      ```info.kgeorgiy.java.advanced.hello server-evil <полное имя класса>```
+    * на противоположной стороне находится старая система, не полностью соответствующая последней версии спецификации
+    * клиент: запустите [ClientTest](test/ClientTest.java) с аргументами `client-evil info.kgeorgiy.ja.slastin.hello.HelloUDPClient`
+    * сервер: запустите [ServerTest](test/ServerTest.java) с аргументами `server-evil info.kgeorgiy.ja.slastin.hello.HelloUDPServer`
 
-#### [Реализация](modules/info.kgeorgiy.ja.slastin.hello/info.kgeorgiy.ja.slastin.hello)
 
-### 12. HelloNonblockingUDP
+## HelloNonblockingUDP
 
-#### Условие
+### Условие
 
 1. Реализуйте клиент и сервер, взаимодействующие по UDP, используя только неблокирующий ввод-вывод.
 
@@ -85,7 +84,15 @@
 
 6. _Бонусный вариант_. Клиент и сервер могут перед началом работы выделить O(число потоков) памяти. Выделять дополнительную память во время работы запрещено.
 
-#### Тесты
+
+### Реализация
+
+- [HelloUDPNonblockingClient](info.kgeorgiy.ja.slastin.hello/HelloUDPNonblockingClient.java)
+- [HelloUDPNonblockingServer](info.kgeorgiy.ja.slastin.hello/HelloUDPNonblockingServer.java)
+- [Utils](info.kgeorgiy.ja.slastin.hello/Utils.java)
+
+
+### Тесты
 
 Интерфейсы
 
@@ -97,9 +104,16 @@
 Тестирование
 
 * простой вариант ✅:
-    * клиент:
-      ```info.kgeorgiy.java.advanced.hello client <полное имя класса>```
-    * сервер:
-      ```info.kgeorgiy.java.advanced.hello server <полное имя класса>```
+    * клиент: запустите [ClientTest](test/ClientTest.java) с аргументами `client info.kgeorgiy.ja.slastin.hello.HelloUDPNonblockingClient`
+    * сервер: запустите [ServerTest](test/ServerTest.java) с аргументами `server info.kgeorgiy.ja.slastin.hello.HelloUDPNonblockingServer`
 
-#### [Реализация](modules/info.kgeorgiy.ja.slastin.hello/info.kgeorgiy.ja.slastin.hello)
+* сложный вариант ✅:
+    * на противоположной стороне находится система, дающая ответы на различных языках
+    * клиент: запустите [ClientTest](test/ClientTest.java) с аргументами `client-i18n info.kgeorgiy.ja.slastin.hello.HelloUDPNonblockingClient`
+    * сервер: запустите [ServerTest](test/ServerTest.java) с аргументами `server-i18n info.kgeorgiy.ja.slastin.hello.HelloUDPNonblockingServer`
+
+* продвинутый вариант ✅:
+    * на противоположной стороне находится старая система, не полностью соответствующая последней версии спецификации
+    * клиент: запустите [ClientTest](test/ClientTest.java) с аргументами `client-evil info.kgeorgiy.ja.slastin.hello.HelloUDPNonblockingClient`
+    * сервер: запустите [ServerTest](test/ServerTest.java) с аргументами `server-evil info.kgeorgiy.ja.slastin.hello.HelloUDPNonblockingServer`
+
